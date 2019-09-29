@@ -22,25 +22,6 @@
 ;; Emacs, (like those the Starter Kit and similar packages) but this
 ;; package focuses only on those that have near-universal appeal.
 
-;;; License:
-
-;; This program is free software; you can redistribute it and/or modify
-;; it under the terms of the GNU General Public License as published by
-;; the Free Software Foundation; either version 3, or (at your option)
-;; any later version.
-;;
-;; This program is distributed in the hope that it will be useful,
-;; but WITHOUT ANY WARRANTY; without even the implied warranty of
-;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-;; GNU General Public License for more details.
-;;
-;; You should have received a copy of the GNU General Public License
-;; along with GNU Emacs; see the file COPYING.  If not, write to the
-;; Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-;; Boston, MA 02110-1301, USA.
-
-;;; Code:
-
 (progn
   (unless (or (fboundp 'helm-mode) (fboundp 'ivy-mode))
     (ido-mode t)
@@ -54,7 +35,7 @@
     (scroll-bar-mode -1))
   (when (fboundp 'horizontal-scroll-bar-mode)
     (horizontal-scroll-bar-mode -1))
-
+  
   (autoload 'zap-up-to-char "misc"
     "Kill up to, but not including ARGth occurrence of CHAR." t)
 
@@ -73,7 +54,16 @@
   (global-set-key (kbd "C-M-s") 'isearch-forward)
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+  (global-set-key (kbd "<f10>") 'toggle-truncate-lines)
+  
   (show-paren-mode 1)
+  (global-linum-mode 1)
+
+  (setq bs-configurations
+        '(("files" "^\\*scratch\\*" nil nil bs-visits-non-file bs-sort-buffer-interns-are-last)))
+
+  (global-set-key (kbd "<f2>") 'bs-show)
+  
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
         apropos-do-all t
@@ -81,10 +71,7 @@
         require-final-newline t
         visible-bell t
         load-prefer-newer t
-        ediff-window-setup-function 'ediff-setup-windows-plain
-        save-place-file (concat user-emacs-directory "places")
-        backup-directory-alist `(("." . ,(concat user-emacs-directory
-                                                 "backups")))))
+        ediff-window-setup-function 'ediff-setup-windows-plain))
 
 (provide 'better-defaults)
 ;;; better-defaults.el ends here
