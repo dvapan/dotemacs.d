@@ -54,7 +54,7 @@
   (global-set-key (kbd "C-M-s") 'isearch-forward)
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-  (global-set-key (kbd "<f10>") 'toggle-truncate-lines)
+  (global-set-key (kbd "<f9>") 'toggle-truncate-lines)
   
   (show-paren-mode 1)
   (global-linum-mode 1)
