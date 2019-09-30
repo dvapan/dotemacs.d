@@ -1,5 +1,6 @@
 (add-to-list 'load-path "~/.emacs.d/lib")
-
-(require 'dash)
+(add-to-list 'load-path "~/.emacs.d/lib/ghub/")
+(add-to-list 'load-path "~/.emacs.d/lib/magit/")
 
 (require 'better-defaults)
+(require 'magit)
