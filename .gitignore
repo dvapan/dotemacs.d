@@ -3,3 +3,7 @@ auto-save-list
 ido.last
 eshell
 *~
+.*
+#*
+*.elc
+Makefile
