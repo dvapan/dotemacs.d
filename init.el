@@ -8,3 +8,5 @@
 (require 'company)
 (add-hook 'after-init-hook 'global-company-mode)
 
+(require 'sr-speedbar)
+(global-set-key (kbd "<f12>") 'sr-speedbar-toggle)
