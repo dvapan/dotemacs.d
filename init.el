@@ -13,6 +13,3 @@
 (yas-global-mode 1)
 
 (require 'yasnippet-snippets)          
-
-(require 'sr-speedbar)
-(global-set-key (kbd "<f12>") 'sr-speedbar-toggle)

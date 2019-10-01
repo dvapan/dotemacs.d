@@ -44,6 +44,7 @@
 
   (require 'saveplace)
   (setq-default save-place t)
+  (require 'sr-speedbar)
 
   (global-set-key (kbd "M-/") 'hippie-expand)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
@@ -54,7 +55,9 @@
   (global-set-key (kbd "C-M-s") 'isearch-forward)
   (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-  (global-set-key (kbd "<f9>") 'toggle-truncate-lines)
+  (global-set-key (kbd "<f5>") 'toggle-truncate-lines)
+  (global-set-key (kbd "<f12>") 'sr-speedbar-toggle)
+  (global-set-key (kbd "<f9>") 'compile)
   
   (show-paren-mode 1)
   (global-linum-mode 1)
