@@ -58,6 +58,7 @@
   (global-set-key (kbd "<f5>") 'toggle-truncate-lines)
   (global-set-key (kbd "<f12>") 'sr-speedbar-toggle)
   (global-set-key (kbd "<f9>") 'compile)
+  (global-set-key (kbd "C-x g") 'magit-status)
   
   (show-paren-mode 1)
   (global-linum-mode 1)
@@ -67,6 +68,10 @@
 
   (global-set-key (kbd "<f2>") 'bs-show)
   
+  (load-theme 'tango-dark)
+  (set-default 'truncate-lines t)
+  (server-start)
+
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
         apropos-do-all t
