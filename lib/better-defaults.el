@@ -91,11 +91,11 @@
 
   (setenv "GOPATH" "/media/data/projects/go")
 
-
-  
   (load-theme 'tango-dark)
   (set-default 'truncate-lines t)
   (server-start)
+
+  (defalias 'yes-or-no-p 'y-or-n-p)
 
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
