@@ -2,8 +2,12 @@ backups
 auto-save-list
 ido.last
 eshell
+image-dired
+elpa
 *~
 .*
 #*
 *.elc
 Makefile
+session.*
+\#*
