@@ -5,6 +5,7 @@
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet/")
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet-snippets/")
 
+(load "better-defaults.el")
 (require 'better-defaults)
 (require 'magit)
 (require 'company)
