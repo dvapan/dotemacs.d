@@ -11,3 +11,4 @@ elpa
 Makefile
 session.*
 \#*
+*.eld
