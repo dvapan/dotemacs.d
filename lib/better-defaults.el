@@ -111,6 +111,15 @@
 
   (defalias 'yes-or-no-p 'y-or-n-p)
 
+  ;; active Babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (emacs-lisp . t)
+     (python . t)
+     (C . t)
+     (dot . t)))
+  
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
         apropos-do-all t
@@ -119,6 +128,8 @@
         visible-bell t
         load-prefer-newer t
         ediff-window-setup-function 'ediff-setup-windows-plain))
+
+
 
 (provide 'better-defaults)
 ;;; better-defaults.el ends here
