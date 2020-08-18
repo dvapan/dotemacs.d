@@ -110,6 +110,14 @@
   (server-start)
 
   (defalias 'yes-or-no-p 'y-or-n-p)
+  ;; active Babel languages
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((R . t)
+     (emacs-lisp . t)
+     (python . t)
+     (C . t)
+     (dot . t)))
   
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
@@ -130,6 +138,8 @@
   (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
 
   )
+
+
 
 
 (provide 'better-defaults)
