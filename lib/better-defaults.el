@@ -110,7 +110,7 @@
   (server-start)
 
   (defalias 'yes-or-no-p 'y-or-n-p)
-
+  
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
         apropos-do-all t
@@ -118,7 +118,19 @@
         require-final-newline t
         visible-bell t
         load-prefer-newer t
-        ediff-window-setup-function 'ediff-setup-windows-plain))
+        ediff-window-setup-function 'ediff-setup-windows-plain)
+
+  (autoload 'markdown-mode "markdown-mode"
+    "Major mode for editing Markdown files" t)
+  (add-to-list 'auto-mode-alist
+               '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+
+  (autoload 'gfm-mode "markdown-mode"
+    "Major mode for editing GitHub Flavored Markdown files" t)
+  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+
+  )
+
 
 (provide 'better-defaults)
 ;;; better-defaults.el ends here
