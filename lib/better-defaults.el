@@ -117,7 +117,11 @@
      (emacs-lisp . t)
      (python . t)
      (C . t)
-     (dot . t)))
+     (dot . t)
+     (makefile . t)
+     (shell .t)))
+
+  (setq org-src-preserve-indentation t)
   
   (setq-default indent-tabs-mode nil)
   (setq save-interprogram-paste-before-kill t
