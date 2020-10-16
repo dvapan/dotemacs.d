@@ -1,13 +1,14 @@
+
 (add-to-list 'load-path "~/.emacs.d/lib")
 (add-to-list 'load-path "~/.emacs.d/lib/ghub/")
 (add-to-list 'load-path "~/.emacs.d/lib/magit/")
 (add-to-list 'load-path "~/.emacs.d/lib/company/")
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet/")
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet-snippets/")
-(add-to-list 'load-path "~/.emacs.d/lib/evil/")
+;; (add-to-list 'load-path "~/.emacs.d/lib/evil/")
 
-(require 'evil)
-(evil-mode 1)
+;; (require 'evil)
+;; (evil-mode 1)
 
 (load "better-defaults.el")
 (require 'better-defaults)
