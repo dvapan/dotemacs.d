@@ -107,3 +107,47 @@
   :bind (:map projectile-mode-map
 	      ("s-p" . projectile-command-map)
 	      ("C-c p" . projectile-command-map)))
+
+(use-package yasnippet
+  :ensure t
+  :bind
+  ("C-c y s" . yas-insert-snippet)
+  ("C-c y v" . yas-visit-snippet-file)
+  :config
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
+  (yas-global-mode 1))
+
+(use-package ibuffer
+  :bind
+  ("C-x C-b" . ibuffer))
+
+;; Enhance M-x to allow easier execution of commands
+(use-package smex
+  :ensure t
+  :config
+  (setq smex-save-file (concat user-emacs-directory ".smex-items"))
+  (smex-initialize)
+  :bind ("M-x" . smex))
+
+(use-package paredit
+  :ensure t
+  :init
+  (add-hook 'clojure-mode-hook #'enable-paredit-mode)
+  (add-hook 'cider-repl-mode-hook #'enable-paredit-mode)
+  (add-hook 'emacs-lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'eval-expression-minibuffer-setup-hook #'enable-paredit-mode)
+  (add-hook 'ielm-mode-hook #'enable-paredit-mode)
+  (add-hook 'lisp-mode-hook #'enable-paredit-mode)
+  (add-hook 'lisp-interaction-mode-hook #'enable-paredit-mode)
+  (add-hook 'scheme-mode-hook #'enable-paredit-mode)
+  :config
+  (show-paren-mode t)
+  :bind (("M-[" . paredit-wrap-square)
+         ("M-{" . paredit-wrap-curly))
+  :diminish nil)
+
+(use-package geiser
+  :ensure t)
+
+(use-package quack
+  :ensure t)
