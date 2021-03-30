@@ -2,8 +2,8 @@ backups
 auto-save-list
 ido.last
 eshell
+transient
 image-dired
-elpa
 *~
 .*
 *.elc
