@@ -82,44 +82,11 @@
 
   (global-set-key (kbd "<f2>") 'bs-show)
 
-  ;; GOLANG SETUP
-  (autoload 'go-mode "go-mode" nil t)
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
-
-  (add-hook 'go-mode-hook
-            (lambda ()
-              (add-hook 'before-save-hook 'gofmt-before-save)
-              (setq tab-width 4)
-              (setq indent-tabs-mode 1)))
-
-  (defun set-exec-path-from-shell-PATH ()
-    (let ((path-from-shell (replace-regexp-in-string
-                            "[ \t\n]*$"
-                            ""
-                            (shell-command-to-string "$SHELL --login -i -c 'echo $PATH'"))))
-      (setenv "PATH" path-from-shell)
-      (setq eshell-path-env path-from-shell) ; for eshell users
-      (setq exec-path (split-string path-from-shell path-separator))))
-
-  (when window-system (set-exec-path-from-shell-PATH))
-
-  (setenv "GOPATH" "/media/data/projects/go")
-
   (load-theme 'tango-dark)
   (set-default 'truncate-lines t)
-  (server-start)
+  (server-start)                       
 
   (defalias 'yes-or-no-p 'y-or-n-p)
-  ;; active Babel languages
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((R . t)
-     (emacs-lisp . t)
-     (python . t)
-     (C . t)
-     (dot . t)
-     (makefile . t)
-     (shell .t)))
 
   (setq org-src-preserve-indentation t)
   
@@ -130,21 +97,7 @@
         require-final-newline t
         visible-bell t
         load-prefer-newer t
-        ediff-window-setup-function 'ediff-setup-windows-plain)
-
-  (autoload 'markdown-mode "markdown-mode"
-    "Major mode for editing Markdown files" t)
-  (add-to-list 'auto-mode-alist
-               '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
-
-  (autoload 'gfm-mode "markdown-mode"
-    "Major mode for editing GitHub Flavored Markdown files" t)
-  (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-
-  )
-
-
-
+        ediff-window-setup-function 'ediff-setup-windows-plain))
 
 (provide 'better-defaults)
 ;;; better-defaults.el ends here

@@ -5,12 +5,7 @@
 (add-to-list 'load-path "~/.emacs.d/lib/company/")
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet/")
 (add-to-list 'load-path "~/.emacs.d/lib/yasnippet-snippets/")
-;; (add-to-list 'load-path "~/.emacs.d/lib/evil/")
 
-;; (require 'evil)
-;; (evil-mode 1)
-
-(load "better-defaults.el")
 (require 'better-defaults)
 (require 'magit)
 (require 'company)
