@@ -17,6 +17,8 @@
 ;; proactively.
 (load-file custom-file)
 
+(defalias 'yes-or-no-p 'y-or-n-p)
+
 ;; Require and initialize `package`.
 (require 'package)
 (package-initialize)
@@ -98,3 +100,10 @@
   :defer t
   :bind ("C-x g" . magit-status))
 
+(use-package projectile
+  :ensure t
+  :init
+  (projectile-mode +1)
+  :bind (:map projectile-mode-map
+	      ("s-p" . projectile-command-map)
+	      ("C-c p" . projectile-command-map)))
