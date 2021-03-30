@@ -5,6 +5,7 @@
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+(setq visible-bell t)
 
 ;; Highlight current line.
 (global-hl-line-mode t)
