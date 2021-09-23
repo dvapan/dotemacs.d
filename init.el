@@ -151,5 +151,12 @@
 (use-package geiser
   :ensure t)
 
-(use-package quack
-  :ensure t)
+;; (use-package quack
+;;   :ensure t)
+
+(use-package org
+  :init
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((python . t))))
+
