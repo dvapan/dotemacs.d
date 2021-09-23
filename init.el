@@ -160,3 +160,6 @@
    'org-babel-load-languages
    '((python . t))))
 
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C-=") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
