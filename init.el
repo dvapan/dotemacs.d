@@ -24,11 +24,6 @@
 (require 'package)
 (package-initialize)
 
-(add-to-list 'load-path "~/.emacs.d/evil")
-(require 'evil)
-(evil-mode 1)
-
-
 ;; Add `melpa` to `package-archives`.
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.org/packages/") t)
