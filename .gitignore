@@ -1,14 +1,19 @@
+*~
+.*
+*.elc
+session.*
+\#*
+*.eld
+
+# Specific dirs
 backups
 auto-save-list
 ido.last
 eshell
 transient
 image-dired
-*~
-.*
-*.elc
-Makefile
-session.*
-\#*
-*.eld
 url
+
+# Specific files
+custom-file.el
+Makefile
