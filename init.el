@@ -10,13 +10,18 @@
 ;; Highlight current line.
 (global-hl-line-mode t)
 
-;; Do not use `init.el` for `custom-*` code - use `custom-file.el`.
+;; Specify the path to the custom file
 (setq custom-file "~/.emacs.d/custom-file.el")
 
-;; Assuming that the code in custom-file is execute before the code
-;; ahead of this line is not a safe assumption. So load this file
-;; proactively.
-(load-file custom-file)
+;; Check if `custom-file` exists; if not, create it with default contents
+(unless (file-exists-p custom-file)
+  (with-temp-file custom-file
+    (insert ";; This is the custom file for Emacs customization.\n")))
+
+;; Load the custom file. Note that `load` is used instead of `load-file`
+;; because `load` doesn't throw an error if the file doesn't exist, which
+;; makes it safer in case the file gets deleted after the check.
+(load custom-file 'noerror)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -58,7 +63,6 @@
   :init
   ;; Use the `spacemacs-dark` theme.
   (load-theme 'spacemacs-dark))
-
 
 (use-package neotree
   :ensure t
@@ -154,6 +158,12 @@
 (use-package quack
   :ensure t)
 
+(use-package markdown-mode
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
