@@ -220,3 +220,24 @@ compilation-error-regexp-alist-alist
 (add-to-list 'compilation-error-regexp-alist
              '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
                1 2 (4) (5)))
+
+
+(setq org-preview-latex-default-process 'dvisvgm) ; No blur when scaling
+
+(defun my/org-mode-latex-scale ()
+  (pcase major-mode
+    ('org-mode
+     (setq org-format-latex-options
+	   (plist-put org-format-latex-options
+		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))
+    ('latex-mode
+     (setq org-format-latex-options
+	   (plist-put org-format-latex-options
+		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))))
+  
+
+(add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
+
+(define-key global-map (kbd "C-+") 'text-scale-increase)
+(define-key global-map (kbd "C-=") 'text-scale-increase)
+(define-key global-map (kbd "C--") 'text-scale-decrease)
