@@ -68,7 +68,7 @@
   :ensure t
   :bind ("<f12>" . 'neotree-toggle)
   :init
-  ;; slow rendering
+  ;; slow renderingnG
   (setq inhibit-compacting-font-caches t)
   ;; set icons theme
   (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
@@ -147,6 +147,9 @@
          ("\\.markdown\\'" . markdown-mode))
   :init (setq markdown-command "multimarkdown"))
 
+(use-package dockerfile-mode
+  :ensure t)
+
 (setq org-preview-latex-default-process 'dvisvgm) ; No blur when scaling
 
 (defun my/org-mode-latex-scale ()
@@ -166,3 +169,7 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
+
+
+(setq org-edit-src-content-indentation 0)
+(setq org-confirm-babel-evaluate nil)
