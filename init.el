@@ -1,6 +1,9 @@
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
 
+;; Set default font
+(set-frame-font "-CNR -CodeNewRoman Nerd Font Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1" nil t)
+
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
