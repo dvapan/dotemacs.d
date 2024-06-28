@@ -13,7 +13,9 @@ eshell
 transient
 image-dired
 url
+elpa
 
 # Specific files
 custom-file.el
 Makefile
+
