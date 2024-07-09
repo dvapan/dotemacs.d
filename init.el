@@ -4,11 +4,15 @@
 ;; Set default font
 (set-frame-font "-CNR -CodeNewRoman Nerd Font Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1" nil t)
 
+
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
+(column-number-mode 1)
+(show-paren-mode 1)
 (setq visible-bell t)
+(setq-default indent-tabs-mode nil)
 
 ;; Highlight current line.
 (global-hl-line-mode t)
@@ -67,54 +71,29 @@
   ;; Use the `spacemacs-dark` theme.
   (load-theme 'spacemacs-dark))
 
-(use-package neotree
-  :ensure t
-  :bind ("<f12>" . 'neotree-toggle)
-  :init
-  ;; slow renderingnG
-  (setq inhibit-compacting-font-caches t)
-  ;; set icons theme
-  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
-  ;; Every time when neotree window is opened,
-  ;; let it find current file and jump to node
-  (setq neo-smart-open t)
-  ;; When running `projectile-switch-project` (C-c p p) `neotree`
-  ;; whill change root automaticaly
-  (setq projectile-switch-project-action 'neotree-project-action)
-  ;; show hidden files
-  (setq neo-show-hidden-files t))
-
 (use-package all-the-icons
   :ensure t
   :defer t)
 
-(use-package company
-  :ensure t
-  :defer t
-  ;; Navigate in completion minibuffer with `C-n` and `C-p`.
-  :bind (:map company-active-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
-  :config
-  ;; Provide instant autocompletion.
-  (setq company-idle-delay 0.3)
+;; (use-package company
+;;   :ensure t
+;;   :defer t
+;;   ;; Navigate in completion minibuffer with `C-n` and `C-p`.
+;;   :bind (:map company-active-map
+;;          ("C-n" . company-select-next)
+;;          ("C-p" . company-select-previous))
+;;   :config
+;;   ;; Provide instant autocompletion.
+;;   (setq company-idle-delay 0.1)
 
-  :init
-  ;; Use company mode everywhere.
-  (global-company-mode t))
+;;   :init
+;;   ;; Use company mode everywhere.
+;;   (global-company-mode t))
 
 (use-package magit
   :ensure t
   :defer t
   :bind ("C-x g" . magit-status))
-
-(use-package projectile
-  :ensure t
-  :init
-  (projectile-mode +1)
-  :bind (:map projectile-mode-map
-	      ("s-p" . projectile-command-map)
-	      ("C-c p" . projectile-command-map)))
 
 (use-package yasnippet
   :ensure t
@@ -122,8 +101,9 @@
   ("C-c y s" . yas-insert-snippet)
   ("C-c y v" . yas-visit-snippet-file)
   :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/")
-  (yas-global-mode 1))
+  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/"))
+
+(yas-global-mode 1)
 
 (use-package ibuffer
   :bind
@@ -153,18 +133,42 @@
 (use-package dockerfile-mode
   :ensure t)
 
-(setq org-preview-latex-default-process 'dvisvgm) ; No blur when scaling
+(use-package multiple-cursors
+  :ensure t
+  :bind 
+  ("C-S-c C-S-c" . 'mc/edit-lines)
+  ("C->"         . 'mc/mark-next-like-this)
+  ("C-<"         . 'mc/mark-previous-like-this)
+  ("C-c C-<"     . 'mc/mark-all-like-this)
+  ("C-\""        . 'mc/skip-to-next-like-this)
+  ("C-:"         . 'mc/skip-to-previous-like-this))
+
+;;; Move Text
+(use-package move-text
+  :ensure t
+  :bind
+  ("M-p" . 'move-text-up)
+  ("M-n" . 'move-text-down))
+
+(use-package dired-x)
+
+;;; dired
+(setq-default dired-dwim-target t)
+(setq dired-listing-switches "-alhB")
+
+;; Some setup
+(setq tramp-auto-save-directory "/tmp")
 
 (defun my/org-mode-latex-scale ()
   (pcase major-mode
     ('org-mode
      (setq org-format-latex-options
 	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))
+		      :scale (+ 1.0 text-scale-mode-amount))))
     ('latex-mode
      (setq org-format-latex-options
 	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))))
+		      :scale (+ 1.0 text-scale-mode-amount))))))
   
 
 (add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
@@ -172,7 +176,19 @@
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
 (define-key global-map (kbd "C--") 'text-scale-decrease)
+(define-key global-map (kbd "C-.") 'nil)
 
+(define-key global-map (kbd "C-c C-c") 'compile)
 
 (setq org-edit-src-content-indentation 0)
 (setq org-confirm-babel-evaluate nil)
+
+;;; c-mode
+(setq-default c-basic-offset 4
+              c-default-style '((java-mode . "java")
+                                (awk-mode . "awk")
+                                (other . "bsd")))
+
+(add-hook 'c-mode-hook (lambda ()
+                         (interactive)
+                         (c-toggle-comment-style -1)))
