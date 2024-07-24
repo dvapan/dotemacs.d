@@ -156,6 +156,9 @@
 (setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alhB")
 
+(use-package tramp
+  :ensure t)
+
 ;; Some setup
 (setq tramp-auto-save-directory "/tmp")
 
