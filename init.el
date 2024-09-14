@@ -1,9 +1,6 @@
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
 
-;; Set default font
-(set-frame-font "-CNR -CodeNewRoman Nerd Font Mono-normal-normal-normal-*-18-*-*-*-m-0-iso10646-1" nil t)
-
 
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
@@ -167,11 +164,11 @@
     ('org-mode
      (setq org-format-latex-options
 	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 text-scale-mode-amount))))
+		      :scale (* 0.75 text-scale-mode-amount))))
     ('latex-mode
      (setq org-format-latex-options
 	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 text-scale-mode-amount))))))
+		      :scale (* 0.75 text-scale-mode-amount))))))
   
 
 (add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
@@ -181,7 +178,16 @@
 (define-key global-map (kbd "C--") 'text-scale-decrease)
 (define-key global-map (kbd "C-.") 'nil)
 
-(define-key global-map (kbd "C-c C-c") 'compile)
+(define-key global-map (kbd "<f9>") 'compile)
+
+
+;; Bind C-, globally to duplicate-line
+(global-set-key (kbd "C-,") 'duplicate-line)
+
+;; Explicitly remove C-, binding in Org-mode and Org-agenda
+(with-eval-after-load 'org
+  (define-key org-mode-map (kbd "C-,") nil))
+
 
 (setq org-edit-src-content-indentation 0)
 (setq org-confirm-babel-evaluate nil)
@@ -195,3 +201,5 @@
 (add-hook 'c-mode-hook (lambda ()
                          (interactive)
                          (c-toggle-comment-style -1)))
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
