@@ -130,6 +130,12 @@
 (use-package dockerfile-mode
   :ensure t)
 
+(use-package haskell-mode
+  :ensure t)
+
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
+(setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
+
 (use-package multiple-cursors
   :ensure t
   :bind 
