@@ -209,3 +209,4 @@
                          (c-toggle-comment-style -1)))
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)
