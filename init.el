@@ -165,6 +165,10 @@
 ;; Some setup
 (setq tramp-auto-save-directory "/tmp")
 
+(use-package cmake-mode
+  :ensure t)
+
+
 (defun my/org-mode-latex-scale ()
   (pcase major-mode
     ('org-mode
