@@ -10,6 +10,12 @@
 (show-paren-mode 1)
 (setq visible-bell t)
 (setq-default indent-tabs-mode nil)
+(setq make-backup-files nil)
+
+(windmove-default-keybindings)
+(global-set-key (kbd "C-M-h") 'backward-kill-word)
+
+(global-set-key (kbd "M-/") 'hippie-expand)
 
 ;; Highlight current line.
 (global-hl-line-mode t)
@@ -21,6 +27,7 @@
 (unless (file-exists-p custom-file)
   (with-temp-file custom-file
     (insert ";; This is the custom file for Emacs customization.\n")))
+
 
 ;; Load the custom file. Note that `load` is used instead of `load-file`
 ;; because `load` doesn't throw an error if the file doesn't exist, which
@@ -214,3 +221,5 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'scroll-left 'disabled nil)
+
+(server-start)
