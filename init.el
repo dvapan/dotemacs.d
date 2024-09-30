@@ -1,7 +1,6 @@
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
 
-
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -32,7 +31,7 @@
 ;; Load the custom file. Note that `load` is used instead of `load-file`
 ;; because `load` doesn't throw an error if the file doesn't exist, which
 ;; makes it safer in case the file gets deleted after the check.
-(load custom-file 'noerror)
+(load custom-file)
 
 (defalias 'yes-or-no-p 'y-or-n-p)
 
