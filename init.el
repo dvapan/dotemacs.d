@@ -85,21 +85,6 @@
   :ensure t
   :defer t)
 
-(use-package company
-  :ensure t
-  :defer t
-  ;; Navigate in completion minibuffer with `C-n` and `C-p`.
-  :bind (:map company-active-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
-  :config
-  ;; Provide instant autocompletion.
-  (setq company-idle-delay 0.1)
-
-  :init
-  ;; Use company mode everywhere.
-  (global-company-mode t))
-
 (use-package magit
   :ensure t
   :defer t
@@ -180,7 +165,6 @@
 
 (use-package cmake-mode
   :ensure t)
-
 
 (defun my/org-mode-latex-scale ()
   (pcase major-mode
