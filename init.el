@@ -47,9 +47,9 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
+(load-theme 'modus-vivendi)
 
 ;; Additional packages and their configurations
-
 
 (use-package ido
   :bind ("C-x C-b" . 'ibuffer)
@@ -59,20 +59,6 @@
   (setq ido-use-filename-at-point nil)
   (setq ido-auto-merge-work-directories-length -1)
   (setq ido-use-virtaul-buffers t))
-
-(use-package spacemacs-theme
-  :ensure t
-  :defer t
-  :config
-  ;; Do not use a different background color for comments.
-  (setq spacemacs-theme-comment-bg nil)
-
-  ;; Comments should appear in italics.
-  (setq spacemacs-theme-comment-italic t)
-
-  :init
-  ;; Use the `spacemacs-dark` theme.
-  (load-theme 'spacemacs-dark))
 
 (require 'ansi-color)
 (defun my/colorize-compilation-buffer ()
