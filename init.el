@@ -174,8 +174,19 @@
 (define-key global-map (kbd "<f9>") 'compile)
 
 
-;; Bind C-, globally to duplicate-line
-(global-set-key (kbd "C-,") 'duplicate-line)
+(defun duplicate-line-upd ()
+  "Duplicate current line"
+  (interactive)
+  (let ((column (- (point) (point-at-bol)))
+        (line (let ((s (thing-at-point 'line t)))
+                (if s (string-remove-suffix "\n" s) ""))))
+    (move-end-of-line 1)
+    (newline)
+    (insert line)
+    (move-beginning-of-line 1)
+    (forward-char column)))
+
+(global-set-key (kbd "C-,") 'duplicate-line-upd)
 
 ;; Explicitly remove C-, binding in Org-mode and Org-agenda
 (with-eval-after-load 'org
