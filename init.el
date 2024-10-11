@@ -14,7 +14,6 @@
 (windmove-default-keybindings)
 (global-set-key (kbd "C-M-h") 'backward-kill-word)
 
-(global-set-key (kbd "M-/") 'hippie-expand)
 
 ;; Highlight current line.
 (global-hl-line-mode t)
@@ -145,6 +144,13 @@
 
 (use-package cmake-mode
   :ensure t)
+
+;;; helm
+(use-package helm
+  :ensure t)
+
+(setq helm-ff-transformer-show-only-basename nil)
+
 
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
