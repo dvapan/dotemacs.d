@@ -143,28 +143,8 @@
 (setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alhB")
 
-(use-package tramp
-  :ensure t)
-
-;; Some setup
-(setq tramp-auto-save-directory "/tmp")
-
 (use-package cmake-mode
   :ensure t)
-
-(defun my/org-mode-latex-scale ()
-  (pcase major-mode
-    ('org-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (* 0.75 text-scale-mode-amount))))
-    ('latex-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (* 0.75 text-scale-mode-amount))))))
-  
-
-(add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
 
 (define-key global-map (kbd "C-+") 'text-scale-increase)
 (define-key global-map (kbd "C-=") 'text-scale-increase)
