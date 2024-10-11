@@ -10,29 +10,52 @@
 (setq visible-bell t)
 (setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
-
-(windmove-default-keybindings)
-(global-set-key (kbd "C-M-h") 'backward-kill-word)
-
-
-;; Highlight current line.
+(defalias 'yes-or-no-p 'y-or-n-p)
+(load-theme 'modus-vivendi)
 (global-hl-line-mode t)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)
+
+
+(global-set-key (kbd "C-M-h") 'backward-kill-word)
+(global-set-key (kbd "C-+")   'text-scale-increase)
+(global-set-key (kbd "C-=")   'text-scale-increase)
+(global-set-key (kbd "C--")   'text-scale-decrease)
+(global-set-key (kbd "<f9>")  'compile)
+
+(defun duplicate-line-upd ()
+  "Duplicate current line"
+  (interactive)
+  (let ((column (- (point) (point-at-bol)))
+        (line (let ((s (thing-at-point 'line t)))
+                (if s (string-remove-suffix "\n" s) ""))))
+    (move-end-of-line 1)
+    (newline)
+    (insert line)
+    (move-beginning-of-line 1)
+    (forward-char column)))
+
+(global-set-key (kbd "C-,") 'duplicate-line-upd)
 
 ;; Specify the path to the custom file
 (setq custom-file "~/.emacs.d/custom-file.el")
-
-;; Check if `custom-file` exists; if not, create it with default contents
 (unless (file-exists-p custom-file)
   (with-temp-file custom-file
     (insert ";; This is the custom file for Emacs customization.\n")))
-
-
-;; Load the custom file. Note that `load` is used instead of `load-file`
-;; because `load` doesn't throw an error if the file doesn't exist, which
-;; makes it safer in case the file gets deleted after the check.
 (load custom-file)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
+;;; c-mode
+(setq-default c-basic-offset 4
+              c-default-style '((java-mode . "java")
+                                (awk-mode . "awk")
+                                (other . "bsd")))
+
+(add-hook 'c-mode-hook (lambda ()
+                         (interactive)
+                         (c-toggle-comment-style -1)))
+
+
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -45,8 +68,6 @@
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
   (package-install 'use-package))
-
-(load-theme 'modus-vivendi)
 
 ;; Additional packages and their configurations
 
@@ -150,48 +171,4 @@
   :ensure t)
 
 (setq helm-ff-transformer-show-only-basename nil)
-
-
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C-=") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
-(define-key global-map (kbd "C-.") 'nil)
-
-(define-key global-map (kbd "<f9>") 'compile)
-
-
-(defun duplicate-line-upd ()
-  "Duplicate current line"
-  (interactive)
-  (let ((column (- (point) (point-at-bol)))
-        (line (let ((s (thing-at-point 'line t)))
-                (if s (string-remove-suffix "\n" s) ""))))
-    (move-end-of-line 1)
-    (newline)
-    (insert line)
-    (move-beginning-of-line 1)
-    (forward-char column)))
-
-(global-set-key (kbd "C-,") 'duplicate-line-upd)
-
-;; Explicitly remove C-, binding in Org-mode and Org-agenda
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-,") nil))
-
-
-(setq org-edit-src-content-indentation 0)
-(setq org-confirm-babel-evaluate nil)
-
-;;; c-mode
-(setq-default c-basic-offset 4
-              c-default-style '((java-mode . "java")
-                                (awk-mode . "awk")
-                                (other . "bsd")))
-
-(add-hook 'c-mode-hook (lambda ()
-                         (interactive)
-                         (c-toggle-comment-style -1)))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'scroll-left 'disabled nil)
 
