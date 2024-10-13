@@ -10,30 +10,52 @@
 (setq visible-bell t)
 (setq-default indent-tabs-mode nil)
 (setq make-backup-files nil)
-
-(windmove-default-keybindings)
-(global-set-key (kbd "C-M-h") 'backward-kill-word)
-
-(global-set-key (kbd "M-/") 'hippie-expand)
-
-;; Highlight current line.
+(defalias 'yes-or-no-p 'y-or-n-p)
+(load-theme 'modus-vivendi)
 (global-hl-line-mode t)
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'scroll-left 'disabled nil)
+
+
+(global-set-key (kbd "C-M-h") 'backward-kill-word)
+(global-set-key (kbd "C-+")   'text-scale-increase)
+(global-set-key (kbd "C-=")   'text-scale-increase)
+(global-set-key (kbd "C--")   'text-scale-decrease)
+(global-set-key (kbd "<f9>")  'compile)
+
+(defun duplicate-line-upd ()
+  "Duplicate current line"
+  (interactive)
+  (let ((column (- (point) (point-at-bol)))
+        (line (let ((s (thing-at-point 'line t)))
+                (if s (string-remove-suffix "\n" s) ""))))
+    (move-end-of-line 1)
+    (newline)
+    (insert line)
+    (move-beginning-of-line 1)
+    (forward-char column)))
+
+(global-set-key (kbd "C-,") 'duplicate-line-upd)
 
 ;; Specify the path to the custom file
 (setq custom-file "~/.emacs.d/custom-file.el")
-
-;; Check if `custom-file` exists; if not, create it with default contents
 (unless (file-exists-p custom-file)
   (with-temp-file custom-file
     (insert ";; This is the custom file for Emacs customization.\n")))
-
-
-;; Load the custom file. Note that `load` is used instead of `load-file`
-;; because `load` doesn't throw an error if the file doesn't exist, which
-;; makes it safer in case the file gets deleted after the check.
 (load custom-file)
 
-(defalias 'yes-or-no-p 'y-or-n-p)
+;;; c-mode
+(setq-default c-basic-offset 4
+              c-default-style '((java-mode . "java")
+                                (awk-mode . "awk")
+                                (other . "bsd")))
+
+(add-hook 'c-mode-hook (lambda ()
+                         (interactive)
+                         (c-toggle-comment-style -1)))
+
+
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -47,9 +69,7 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-
 ;; Additional packages and their configurations
-
 
 (use-package ido
   :bind ("C-x C-b" . 'ibuffer)
@@ -59,20 +79,6 @@
   (setq ido-use-filename-at-point nil)
   (setq ido-auto-merge-work-directories-length -1)
   (setq ido-use-virtaul-buffers t))
-
-(use-package spacemacs-theme
-  :ensure t
-  :defer t
-  :config
-  ;; Do not use a different background color for comments.
-  (setq spacemacs-theme-comment-bg nil)
-
-  ;; Comments should appear in italics.
-  (setq spacemacs-theme-comment-italic t)
-
-  :init
-  ;; Use the `spacemacs-dark` theme.
-  (load-theme 'spacemacs-dark))
 
 (require 'ansi-color)
 (defun my/colorize-compilation-buffer ()
@@ -160,60 +166,12 @@
 (setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alhB")
 
-(use-package tramp
-  :ensure t)
-
-;; Some setup
-(setq tramp-auto-save-directory "/tmp")
-
-
 (use-package cmake-mode
   :ensure t)
 
-(defun my/org-mode-latex-scale ()
-  (pcase major-mode
-    ('org-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (* 0.75 text-scale-mode-amount))))
-    ('latex-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (* 0.75 text-scale-mode-amount))))))
-  
+;;; helm
+(use-package helm
+  :ensure t)
 
-(add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
+(setq helm-ff-transformer-show-only-basename nil)
 
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C-=") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
-(define-key global-map (kbd "C-.") 'nil)
-
-(define-key global-map (kbd "<f9>") 'compile)
-
-
-;; Bind C-, globally to duplicate-line
-(global-set-key (kbd "C-,") 'duplicate-line)
-
-;; Explicitly remove C-, binding in Org-mode and Org-agenda
-(with-eval-after-load 'org
-  (define-key org-mode-map (kbd "C-,") nil))
-
-
-(setq org-edit-src-content-indentation 0)
-(setq org-confirm-babel-evaluate nil)
-
-;;; c-mode
-(setq-default c-basic-offset 4
-              c-default-style '((java-mode . "java")
-                                (awk-mode . "awk")
-                                (other . "bsd")))
-
-(add-hook 'c-mode-hook (lambda ()
-                         (interactive)
-                         (c-toggle-comment-style -1)))
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-(put 'scroll-left 'disabled nil)
-
-(server-start)
