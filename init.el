@@ -131,6 +131,9 @@
 (use-package haskell-mode
   :ensure t)
 
+(use-package proof-general
+  :ensure t)
+
 (setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
 (setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
 
@@ -162,6 +165,7 @@
 
 ;; Some setup
 (setq tramp-auto-save-directory "/tmp")
+
 
 (use-package cmake-mode
   :ensure t)
