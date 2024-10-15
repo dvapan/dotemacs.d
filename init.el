@@ -15,13 +15,13 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'scroll-left 'disabled nil)
-(add-to-list 'default-frame-alist `(font . "Monospace-17"))
 
 (global-set-key (kbd "C-M-h") 'backward-kill-word)
 (global-set-key (kbd "C-+")   'text-scale-increase)
 (global-set-key (kbd "C-=")   'text-scale-increase)
 (global-set-key (kbd "C--")   'text-scale-decrease)
 (global-set-key (kbd "<f9>")  'compile)
+(add-to-list 'default-frame-alist `(font . "Monospace-17"))
 
 (defun duplicate-line-upd ()
   "Duplicate current line"
@@ -208,3 +208,4 @@
   :ensure t)
 
 (setq helm-ff-transformer-show-only-basename nil)
+
