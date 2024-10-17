@@ -37,29 +37,6 @@
 
 (global-set-key (kbd "C-,") 'duplicate-line-upd)
 
-;;; Whitespace mode
-(defun set-up-whitespace-handling ()
-  (interactive)
-  (whitespace-mode 1)
-  (set-face-attribute 'whitespace-space nil :background nil :foreground "gray20")
-  (add-to-list 'write-file-functions 'delete-trailing-whitespace))
-
-(add-hook 'c++-mode-hook 'set-up-whitespace-handling)
-(add-hook 'c-mode-hook 'set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'set-up-whitespace-handling)
-(add-hook 'emacs-lisp-mode 'set-up-whitespace-handling)
-(add-hook 'java-mode-hook 'set-up-whitespace-handling)
-(add-hook 'rust-mode-hook 'set-up-whitespace-handling)
-(add-hook 'markdown-mode-hook 'set-up-whitespace-handling)
-(add-hook 'haskell-mode-hook 'set-up-whitespace-handling)
-(add-hook 'python-mode-hook 'set-up-whitespace-handling)
-(add-hook 'asm-mode-hook 'set-up-whitespace-handling)
-(add-hook 'fasm-mode-hook 'set-up-whitespace-handling)
-(add-hook 'go-mode-hook 'set-up-whitespace-handling)
-(add-hook 'yaml-mode-hook 'set-up-whitespace-handling)
-
-
-
 ;; Specify the path to the custom file
 (setq custom-file "~/.emacs.d/custom-file.el")
 (unless (file-exists-p custom-file)
