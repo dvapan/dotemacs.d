@@ -77,8 +77,6 @@
                          (interactive)
                          (c-toggle-comment-style -1)))
 
-
-
 ;; Require and initialize `package`.
 (require 'package)
 (package-initialize)
@@ -133,16 +131,6 @@
   :defer t
   :bind ("C-x g" . magit-status))
 
-(use-package yasnippet
-  :ensure t
-  :bind
-  ("C-c y s" . yas-insert-snippet)
-  ("C-c y v" . yas-visit-snippet-file)
-  :config
-  (add-to-list 'yas-snippet-dirs "~/.emacs.d/snippets/"))
-
-(yas-global-mode 1)
-
 (use-package ibuffer
   :bind
   ("C-x C-b" . ibuffer))
@@ -170,27 +158,6 @@
 
 (use-package dockerfile-mode
   :ensure t)
-
-(use-package haskell-mode
-  :ensure t)
-
-(use-package proof-general
-  :ensure t)
-
-
-;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
-(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
-;; ## end of OPAM user-setup addition for emacs / base ## keep this line
-
-(use-package opam-switch-mode
-  :ensure t
-  :hook
-  ((coq-mode tuareg-mode) . opam-switch-mode))
-
-(setq coq-kill-coq-on-opam-switch t)
-
-(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
-(setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
 
 (use-package multiple-cursors
   :ensure t
