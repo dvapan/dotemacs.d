@@ -120,12 +120,6 @@
   (smex-initialize)
   :bind ("M-x" . smex))
 
-(use-package geiser
-  :ensure t)
-
-(use-package quack
-  :ensure t)
-
 (use-package markdown-mode
   :ensure t
   :mode (("README\\.md\\'" . gfm-mode)
@@ -161,10 +155,4 @@
 
 (use-package cmake-mode
   :ensure t)
-
-;;; helm
-(use-package helm
-  :ensure t)
-
-(setq helm-ff-transformer-show-only-basename nil)
 
