@@ -130,6 +130,27 @@
 (use-package dockerfile-mode
   :ensure t)
 
+(use-package haskell-mode
+  :ensure t)
+
+(use-package proof-general
+  :ensure t)
+
+
+;; ## added by OPAM user-setup for emacs / base ## 56ab50dc8996d2bb95e7856a6eddb17b ## you can edit, but keep this line
+(require 'opam-user-setup "~/.emacs.d/opam-user-setup.el")
+;; ## end of OPAM user-setup addition for emacs / base ## keep this line
+
+(use-package opam-switch-mode
+  :ensure t
+  :hook
+  ((coq-mode tuareg-mode) . opam-switch-mode))
+
+(setq coq-kill-coq-on-opam-switch t)
+
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
+(setq exec-path (append exec-path '(expand-file-name "~/.ghcup/bin")))
+
 (use-package multiple-cursors
   :ensure t
   :bind 
