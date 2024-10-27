@@ -77,6 +77,7 @@
   (setq ido-auto-merge-work-directories-length -1)
   (setq ido-use-virtaul-buffers t))
 
+(setq compilation-scroll-output 'first-error)
 (require 'ansi-color)
 (defun my/colorize-compilation-buffer ()
   (when (eq major-mode 'compilation-mode)
