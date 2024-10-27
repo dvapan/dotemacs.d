@@ -21,6 +21,8 @@
 (global-set-key (kbd "C-=")   'text-scale-increase)
 (global-set-key (kbd "C--")   'text-scale-decrease)
 (global-set-key (kbd "<f9>")  'compile)
+(global-set-key (kbd "C-c f") 'find-file-at-point)
+
 (add-to-list 'default-frame-alist `(font . "Monospace-14"))
 
 (defun duplicate-line-upd ()
