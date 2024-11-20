@@ -176,6 +176,8 @@
 ;;; dired
 (setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alhB")
+(setq dired-listing-switches "-l --group-directories-first")
+
 
 (use-package cmake-mode
   :ensure t)
