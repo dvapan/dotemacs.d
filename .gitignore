@@ -20,3 +20,5 @@ custom-file.el
 Makefile
 
 tramp
+projects
+projectile.cache

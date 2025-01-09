@@ -153,6 +153,27 @@
 (use-package rust-mode
   :ensure t)
 
+(use-package projectile
+  :ensure t
+  :diminish projectile-mode
+  :config
+  (projectile-mode +1)
+  ;; (setq projectile-project-search-path '("~/projects/"))
+  (setq projectile-completion-system 'ido)
+  (setq projectile-globally-ignored-directories '("node_modules" ".git" "target"))
+  (setq projectile-enable-caching t)
+  :bind-keymap
+  ("C-c p" . projectile-command-map))
+
+(use-package ag
+  :ensure t
+  :defer t
+  :commands (ag ag-regexp ag-project)
+  :config
+  (setq ag-highlight-search t)  ;; Highlight matches in the search results
+  (setq ag-reuse-buffers t))    ;; Reuse the same buffer for results
+
+
 (use-package docker-compose-mode
   :ensure t)
 
