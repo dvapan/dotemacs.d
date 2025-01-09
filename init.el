@@ -1,6 +1,6 @@
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
-
+(add-to-list 'load-path "~/.emacs.d/modes/")
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -81,11 +81,25 @@
 
 (setq compilation-scroll-output 'first-error)
 (require 'ansi-color)
-(defun my/colorize-compilation-buffer ()
-  (when (eq major-mode 'compilation-mode)
-    (ansi-color-apply-on-region compilation-filter-start (point))))
 
-(add-hook 'compilation-filter-hook 'my/colorize-compilation-buffer)
+(require 'simpc-mode)
+(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+
+(add-hook 'simpc-mode-hook
+          (lambda ()
+            (interactive)
+            (setq-local fill-paragraph-function 'astyle-buffer)))
+
+(defun my-colorize-compilation-buffer ()
+  "Apply ANSI color codes and handle hyperlinks in the compilation buffer."
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))
+    ;; Remove unsupported hyperlinks escape sequences
+    (goto-char (point-min))
+    (while (re-search-forward "\033]8;;.*?\033\\\\\\(.*?\\)\033]8;;\033\\\\" nil t)
+      (replace-match "\\1"))))
+
+(add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
 
 (use-package all-the-icons
   :ensure t
