@@ -1,15 +1,18 @@
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
 (add-to-list 'load-path "~/.emacs.d/modes/")
+
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (column-number-mode 1)
 (show-paren-mode 1)
-(setq visible-bell t)
+(setq-default visible-bell t)
 (setq-default indent-tabs-mode nil)
-(setq make-backup-files nil)
+(setq-default tab-width 4) 
+(setq-default make-backup-files nil)
+(setq-default compilation-scroll-output t)
 (defalias 'yes-or-no-p 'y-or-n-p)
 (load-theme 'deeper-blue)
 (put 'upcase-region 'disabled nil)
@@ -20,15 +23,16 @@
 (global-set-key (kbd "C-+")   'text-scale-increase)
 (global-set-key (kbd "C-=")   'text-scale-increase)
 (global-set-key (kbd "C--")   'text-scale-decrease)
-(global-set-key (kbd "<f9>")  'compile)
+(global-set-key (kbd "C-c c")  'compile)
 (global-set-key (kbd "C-c f") 'find-file-at-point)
+(global-set-key (kbd "C-x C-g") 'find-file-at-point)
 
 (add-to-list 'default-frame-alist `(font . "Monospace-14"))
 
 (defun duplicate-line-upd ()
   "Duplicate current line"
   (interactive)
-  (let ((column (- (point) (point-at-bol)))
+  (let ((column (- (point) (pos-bol)))
         (line (let ((s (thing-at-point 'line t)))
                 (if s (string-remove-suffix "\n" s) ""))))
     (move-end-of-line 1)
@@ -46,15 +50,15 @@
     (insert ";; This is the custom file for Emacs customization.\n")))
 (load custom-file)
 
+
+(require 'fasm-mode)
+(add-to-list 'auto-mode-alist '("\\.asm\\'" . fasm-mode))
+
 ;;; c-mode
 (setq-default c-basic-offset 4
               c-default-style '((java-mode . "java")
                                 (awk-mode . "awk")
                                 (other . "bsd")))
-
-(add-hook 'c-mode-hook (lambda ()
-                         (interactive)
-                         (c-toggle-comment-style -1)))
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -79,11 +83,10 @@
   (setq ido-auto-merge-work-directories-length -1)
   (setq ido-use-virtaul-buffers t))
 
-(setq compilation-scroll-output 'first-error)
 (require 'ansi-color)
 
-(require 'simpc-mode)
-(add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
+;; (require 'simpc-mode)
+;; (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
 
 (add-hook 'simpc-mode-hook
           (lambda ()
@@ -107,18 +110,22 @@
 
 (use-package company
   :ensure t
-  :defer t
-  ;; Navigate in completion minibuffer with `C-n` and `C-p`.
+  :hook (after-init . global-company-mode)
   :bind (:map company-active-map
-         ("C-n" . company-select-next)
-         ("C-p" . company-select-previous))
+              ("C-n" . company-select-next)
+              ("C-p" . company-select-previous))
   :config
-  ;; Provide instant autocompletion.
-  (setq company-idle-delay 0.1)
+  (setq company-idle-delay 0.1
+        company-minimum-prefix-length 1
+        company-selection-wrap-around t
+        company-dabbrev-ignore-case t
+        company-dabbrev-downcase nil)
 
-  :init
-  ;; Use company mode everywhere.
-  (global-company-mode t))
+  (setq company-backends
+        '((company-clang company-dabbrev-code company-keywords)
+          company-files
+          company-dabbrev)))
+
 
 (use-package magit
   :ensure t
@@ -202,9 +209,14 @@
 ;;; dired
 (setq-default dired-dwim-target t)
 (setq dired-listing-switches "-alhB")
-(setq dired-listing-switches "-l --group-directories-first")
+(setq dired-listing-switches "-alhB --group-directories-first")
 
 
 (use-package cmake-mode
   :ensure t)
 
+compilation-error-regexp-alist-alist
+
+(add-to-list 'compilation-error-regexp-alist
+             '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
+               1 2 (4) (5)))
