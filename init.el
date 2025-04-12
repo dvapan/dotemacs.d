@@ -27,7 +27,10 @@
 (global-set-key (kbd "C-c f") 'find-file-at-point)
 (global-set-key (kbd "C-x C-g") 'find-file-at-point)
 
-(add-to-list 'default-frame-alist `(font . "Monospace-14"))
+
+;; Set default font size for all frames
+(add-to-list 'default-frame-alist '(font . "Monospace-14"))
+
 
 (defun duplicate-line-upd ()
   "Duplicate current line"
@@ -222,22 +225,46 @@ compilation-error-regexp-alist-alist
                1 2 (4) (5)))
 
 
-(setq org-preview-latex-default-process 'dvisvgm) ; No blur when scaling
+(use-package org
+  :config
+  (defvar my/text-scale-mode-amount 1)
 
-(defun my/org-mode-latex-scale ()
-  (pcase major-mode
-    ('org-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))
-    ('latex-mode
-     (setq org-format-latex-options
-	   (plist-put org-format-latex-options
-		      :scale (+ 1.0 (* 0.25 text-scale-mode-amount)))))))
-  
+  (defun my/text-scale-amount ()
+    (if (boundp 'text-scale-mode-amount)
+        text-scale-mode-amount
+      my/text-scale-mode-amount))
 
-(add-hook 'text-scale-mode-hook #'my/org-mode-latex-scale)
+  (defun my/org-calc-latex-scale ()
+    ;; Adjust these numbers to taste
+    (+ 1.25 (* 0.5 (my/text-scale-amount))))
 
-(define-key global-map (kbd "C-+") 'text-scale-increase)
-(define-key global-map (kbd "C-=") 'text-scale-increase)
-(define-key global-map (kbd "C--") 'text-scale-decrease)
+  (defun my/org-set-latex-scale ()
+    (setq org-format-latex-options
+          (plist-put org-format-latex-options :scale (my/org-calc-latex-scale))))
+
+  (defun my/org-refresh-latex-previews ()
+    (when (derived-mode-p 'org-mode)
+      (my/org-set-latex-scale)
+      (org--latex-preview-region (point-min) (point-max))))
+
+  (defun my/org-init-latex-scale ()
+    (my/org-set-latex-scale))
+
+  (defun my/text-scale-increase ()
+    (interactive)
+    (text-scale-increase 1)
+    (setq my/text-scale-mode-amount (1+ my/text-scale-mode-amount)))
+
+  (defun my/text-scale-decrease ()
+    (interactive)
+    (text-scale-increase -1)
+    (setq my/text-scale-mode-amount (1- my/text-scale-mode-amount)))
+
+  :hook
+  ((org-mode . my/org-init-latex-scale)
+   (text-scale-mode . my/org-refresh-latex-previews))
+
+  :bind
+  (("C-=" . my/text-scale-increase)
+   ("C-+" . my/text-scale-increase)
+   ("C--" . my/text-scale-decrease)))
