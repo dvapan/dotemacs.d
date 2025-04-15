@@ -84,7 +84,7 @@
   (setq ido-enable-flex-matching t)
   (setq ido-use-filename-at-point nil)
   (setq ido-auto-merge-work-directories-length -1)
-  (setq ido-use-virtaul-buffers t))
+  (setq ido-use-virtual-buffers t))
 
 (require 'ansi-color)
 
@@ -120,9 +120,7 @@
   :config
   (setq company-idle-delay 0.1
         company-minimum-prefix-length 1
-        company-selection-wrap-around t
-        company-dabbrev-ignore-case t
-        company-dabbrev-downcase nil)
+        company-selection-wrap-around t)
 
   (setq company-backends
         '((company-clang company-dabbrev-code company-keywords)
@@ -142,6 +140,7 @@
 ;; Enhance M-x to allow easier execution of commands
 (use-package smex
   :ensure t
+  :commands (smex smex-initialize)
   :config
   (setq smex-save-file (concat user-emacs-directory ".smex-items"))
   (smex-initialize)
@@ -165,6 +164,7 @@
 
 (use-package projectile
   :ensure t
+  :commands (projectile-mode)
   :diminish projectile-mode
   :config
   (projectile-mode +1)
@@ -192,20 +192,23 @@
 
 (use-package multiple-cursors
   :ensure t
+  :commands (mc/edit-lines mc/mark-next-like-this mc/mark-previous-like-this
+             mc/mark-all-like-this mc/skip-to-next-like-this mc/skip-to-previous-like-this)
   :bind 
-  ("C-S-c C-S-c" . 'mc/edit-lines)
-  ("C->"         . 'mc/mark-next-like-this)
-  ("C-<"         . 'mc/mark-previous-like-this)
-  ("C-c C-<"     . 'mc/mark-all-like-this)
-  ("C-\""        . 'mc/skip-to-next-like-this)
-  ("C-:"         . 'mc/skip-to-previous-like-this))
+  (("C-S-c C-S-c" . mc/edit-lines)
+   ("C->"         . mc/mark-next-like-this)
+   ("C-<"         . mc/mark-previous-like-this)
+   ("C-c C-<"     . mc/mark-all-like-this)
+   ("C-\""        . mc/skip-to-next-like-this)
+   ("C-:"         . mc/skip-to-previous-like-this)))
 
 ;;; Move Text
 (use-package move-text
   :ensure t
+  :commands (move-text-up move-text-down)
   :bind
-  ("M-p" . 'move-text-up)
-  ("M-n" . 'move-text-down))
+  (("M-p" . move-text-up)
+   ("M-n" . move-text-down)))
 
 (use-package dired-x)
 
@@ -224,47 +227,56 @@ compilation-error-regexp-alist-alist
              '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
                1 2 (4) (5)))
 
+(defvar org-format-latex-options nil
+  "Options used by Org for LaTeX previews.")
+
+(defvar my/text-scale-mode-amount 1)
+
+(defun my/text-scale-amount ()
+  (if (boundp 'text-scale-mode-amount)
+      text-scale-mode-amount
+    my/text-scale-mode-amount))
+
+(defun my/org-calc-latex-scale ()
+  (+ 1.25 (* 0.5 (my/text-scale-amount))))
+
+(defun my/org-set-latex-scale ()
+  (setq-default org-format-latex-options
+        (plist-put org-format-latex-options :scale (my/org-calc-latex-scale))))
+
+(defun my/org-refresh-latex-previews ()
+  (when (derived-mode-p 'org-mode)
+    (my/org-set-latex-scale)
+    (org-clear-latex-preview)
+    (org-latex-preview)))
+
+(defun my/org-init-latex-scale ()
+  (my/org-set-latex-scale))
+
+(defun my/text-scale-increase ()
+  (interactive)
+  (text-scale-increase 1)
+  (setq my/text-scale-mode-amount (1+ my/text-scale-mode-amount))
+  (my/org-refresh-latex-previews))
+
+(defun my/text-scale-decrease ()
+  (interactive)
+  (text-scale-increase -1)
+  (setq my/text-scale-mode-amount (1- my/text-scale-mode-amount))
+  (my/org-refresh-latex-previews))
 
 (use-package org
-  :config
-  (defvar my/text-scale-mode-amount 1)
-
-  (defun my/text-scale-amount ()
-    (if (boundp 'text-scale-mode-amount)
-        text-scale-mode-amount
-      my/text-scale-mode-amount))
-
-  (defun my/org-calc-latex-scale ()
-    ;; Adjust these numbers to taste
-    (+ 1.25 (* 0.5 (my/text-scale-amount))))
-
-  (defun my/org-set-latex-scale ()
-    (setq org-format-latex-options
-          (plist-put org-format-latex-options :scale (my/org-calc-latex-scale))))
-
-  (defun my/org-refresh-latex-previews ()
-    (when (derived-mode-p 'org-mode)
-      (my/org-set-latex-scale)
-      (org--latex-preview-region (point-min) (point-max))))
-
-  (defun my/org-init-latex-scale ()
-    (my/org-set-latex-scale))
-
-  (defun my/text-scale-increase ()
-    (interactive)
-    (text-scale-increase 1)
-    (setq my/text-scale-mode-amount (1+ my/text-scale-mode-amount)))
-
-  (defun my/text-scale-decrease ()
-    (interactive)
-    (text-scale-increase -1)
-    (setq my/text-scale-mode-amount (1- my/text-scale-mode-amount)))
-
+  :defer t
+  :commands (org-latex-preview org-clear-latex-preview)
   :hook
-  ((org-mode . my/org-init-latex-scale)
-   (text-scale-mode . my/org-refresh-latex-previews))
-
+  (org-mode . my/org-init-latex-scale)
   :bind
   (("C-=" . my/text-scale-increase)
    ("C-+" . my/text-scale-increase)
-   ("C--" . my/text-scale-decrease)))
+   ("C--" . my/text-scale-decrease))
+  :config
+  (with-eval-after-load 'org
+    (setq org-format-latex-options
+          (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))))
+
+

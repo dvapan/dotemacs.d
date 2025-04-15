@@ -22,3 +22,5 @@ Makefile
 tramp
 projects
 projectile.cache
+
+eln-cache
