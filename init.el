@@ -67,9 +67,12 @@
 (require 'package)
 (package-initialize)
 
-;; Add `melpa` to `package-archives`.
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.org/packages/") t)
+             '("gnu" . "https://elpa.gnu.org/packages/") t)
+(add-to-list 'package-archives
+             '("nongnu" . "https://elpa.nongnu.org/nongnu/") t)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 
 (when (not (package-installed-p 'use-package))
   (package-refresh-contents)
@@ -124,8 +127,7 @@
 
   (setq company-backends
         '((company-clang company-dabbrev-code company-keywords)
-          company-files
-          company-dabbrev)))
+          company-files)))
 
 
 (use-package magit
@@ -227,9 +229,6 @@ compilation-error-regexp-alist-alist
              '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
                1 2 (4) (5)))
 
-(defvar org-format-latex-options nil
-  "Options used by Org for LaTeX previews.")
-
 (defvar my/text-scale-mode-amount 1)
 
 (defun my/text-scale-amount ()
@@ -278,5 +277,4 @@ compilation-error-regexp-alist-alist
   (with-eval-after-load 'org
     (setq org-format-latex-options
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))))
-
 
