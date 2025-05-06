@@ -276,5 +276,6 @@ compilation-error-regexp-alist-alist
   :config
   (with-eval-after-load 'org
     (setq org-format-latex-options
-          (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))))
+          (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
+    (setq org-confirm-babel-evaluate nil)))
 
