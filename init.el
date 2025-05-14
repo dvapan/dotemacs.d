@@ -126,8 +126,7 @@
         company-selection-wrap-around t)
 
   (setq company-backends
-        '((company-clang company-dabbrev-code company-keywords)
-          company-files)))
+        '((company-dabbrev-code company-keywords company-files))))
 
 
 (use-package magit
