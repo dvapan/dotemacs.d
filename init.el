@@ -278,22 +278,3 @@ compilation-error-regexp-alist-alist
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
     (setq org-confirm-babel-evaluate nil)))
 
-(use-package gptel
-  :ensure t
-  :custom
-  (gptel-default-mode 'org-mode)
-  (gptel-directives
-   '((Claude . "You are Claude, a helpful and precise AI assistant.")))
-  :bind
-  (("C-c g c" . gptel-send)
-   ("C-c g n" . gptel)
-   ("C-c g m" . gptel-menu)
-   ("C-c g s" . my/claude-session))
-  :config
-  ;; Register Claude backend
-  (gptel-make-anthropic 
-   "Claude" 
-   :stream t 
-   :key (lambda () 
-          (auth-source-pick-first-password :host "api.anthropic.com" :user "apikey"))))
-  
