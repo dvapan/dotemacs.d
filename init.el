@@ -278,3 +278,29 @@ compilation-error-regexp-alist-alist
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
     (setq org-confirm-babel-evaluate nil)))
 
+
+;; ----------------------------------------
+;; MIT Scheme REPL via Geiser (manual only)
+;; ----------------------------------------
+
+(use-package geiser
+  :ensure t
+  :init
+  (setq geiser-active-implementations '(mit))
+  (setq geiser-default-implementation 'mit)
+  (setq geiser-mode-start-repl-p nil) ;; disable auto REPL
+  (setq geiser-repl-query-on-kill-p nil)
+  (setq geiser-log-verbose nil))      ;; silence deprecated warnings
+
+(use-package geiser-mit
+  :ensure t
+  :after geiser
+  :config
+  (setq geiser-mit-binary "/usr/bin/mit-scheme")) ;; adjust path if needed
+
+;; Optional: ensure geiser-mode activates in .scm files
+(add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
+(add-hook 'scheme-mode-hook #'geiser-mode)
+
+;; Manual REPL launch via: M-x geiser or M-x geiser-mit
+;; REPL <-> Code toggle: C-c C-z
