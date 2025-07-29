@@ -280,13 +280,13 @@ compilation-error-regexp-alist-alist
 
 
 ;; ----------------------------------------
-;; MIT Scheme REPL via Geiser (manual only)
-;; ----------------------------------------
+;; Scheme REPLs via Geiser (MIT Scheme + Racket)
+;; --------------------------------------------
 
 (use-package geiser
   :ensure t
   :init
-  (setq geiser-active-implementations '(mit))
+  (setq geiser-active-implementations '(mit racket))
   (setq geiser-default-implementation 'mit)
   (setq geiser-mode-start-repl-p nil) ;; disable auto REPL
   (setq geiser-repl-query-on-kill-p nil)
@@ -298,9 +298,16 @@ compilation-error-regexp-alist-alist
   :config
   (setq geiser-mit-binary "/usr/bin/mit-scheme")) ;; adjust path if needed
 
-;; Optional: ensure geiser-mode activates in .scm files
+(use-package geiser-racket
+  :ensure t
+  :after geiser
+  :config
+  (setq geiser-racket-binary "/usr/bin/racket")) ;; adjust path if needed
+
+;; Optional: ensure geiser-mode activates in .scm and .rkt files
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
+(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 (add-hook 'scheme-mode-hook #'geiser-mode)
 
-;; Manual REPL launch via: M-x geiser or M-x geiser-mit
+;; Manual REPL launch via: M-x geiser or M-x geiser-mit / geiser-racket
 ;; REPL <-> Code toggle: C-c C-z
