@@ -14,7 +14,10 @@
 (setq-default make-backup-files nil)
 (setq-default compilation-scroll-output t)
 (defalias 'yes-or-no-p 'y-or-n-p)
-(load-theme 'deeper-blue)
+
+;; Use local fixed theme
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'deeper-blue t)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 (put 'scroll-left 'disabled nil)
