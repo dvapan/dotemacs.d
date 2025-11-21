@@ -94,9 +94,6 @@
 
 (require 'ansi-color)
 
-;; (require 'simpc-mode)
-;; (add-to-list 'auto-mode-alist '("\\.[hc]\\(pp\\)?\\'" . simpc-mode))
-
 (add-hook 'simpc-mode-hook
           (lambda ()
             (interactive)
@@ -231,6 +228,9 @@ compilation-error-regexp-alist-alist
              '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
                1 2 (4) (5)))
 
+(use-package glsl-mode
+    :ensure t)
+
 (defvar my/text-scale-mode-amount 1)
 
 (defun my/text-scale-amount ()
@@ -281,7 +281,6 @@ compilation-error-regexp-alist-alist
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
     (setq org-confirm-babel-evaluate nil)))
 
-
 ;; ----------------------------------------
 ;; Scheme REPLs via Geiser (MIT Scheme + Racket)
 ;; --------------------------------------------
@@ -314,3 +313,5 @@ compilation-error-regexp-alist-alist
 
 ;; Manual REPL launch via: M-x geiser or M-x geiser-mit / geiser-racket
 ;; REPL <-> Code toggle: C-c C-z
+
+
