@@ -231,6 +231,15 @@ compilation-error-regexp-alist-alist
 (use-package glsl-mode
     :ensure t)
 
+(use-package go-mode
+  :ensure t)
+
+(use-package auto-compile
+  :ensure t
+  :config
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode))
+
 (defvar my/text-scale-mode-amount 1)
 
 (defun my/text-scale-amount ()
@@ -279,7 +288,9 @@ compilation-error-regexp-alist-alist
   (with-eval-after-load 'org
     (setq org-format-latex-options
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
-    (setq org-confirm-babel-evaluate nil)))
+    (setq org-confirm-babel-evaluate nil)
+    ;; Add cancel package for LaTeX preview
+    (add-to-list 'org-latex-packages-alist '("" "cancel" t))))
 
 ;; ----------------------------------------
 ;; Scheme REPLs via Geiser (MIT Scheme + Racket)
