@@ -190,7 +190,8 @@
 (use-package docker-compose-mode
   :ensure t)
 
-(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/.ghcup/bin")))
+(setenv "PATH" (concat (getenv "PATH") ":" (expand-file-name "~/opt/ghc/bin") ":" (expand-file-name "~/.ghcup/bin")))
+(add-to-list 'exec-path (expand-file-name "~/opt/ghc/bin"))
 (add-to-list 'exec-path (expand-file-name "~/.ghcup/bin"))
 
 (use-package multiple-cursors
