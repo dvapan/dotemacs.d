@@ -14,6 +14,7 @@
 (setq-default tab-width 4) 
 (setq-default make-backup-files nil)
 (setq-default compilation-scroll-output t)
+(windmove-default-keybindings)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Use local fixed theme
