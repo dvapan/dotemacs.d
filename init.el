@@ -92,7 +92,10 @@
   (setq ido-enable-flex-matching t)
   (setq ido-use-filename-at-point nil)
   (setq ido-auto-merge-work-directories-length -1)
-  (setq ido-use-virtual-buffers t))
+  (setq ido-use-virtual-buffers nil))
+
+;; Disable recentf-mode to avoid file history
+(recentf-mode -1)
 
 (require 'ansi-color)
 
