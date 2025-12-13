@@ -231,6 +231,11 @@ compilation-error-regexp-alist-alist
              '("\\([a-zA-Z0-9\\.]+\\)(\\([0-9]+\\)\\(,\\([0-9]+\\)\\)?) \\(Warning:\\)?"
                1 2 (4) (5)))
 
+;; Haskell/GHC error format: filename.hs:line:col
+(add-to-list 'compilation-error-regexp-alist
+             '("\\([^ \n\t]+\\.hs\\):\\([0-9]+\\):\\([0-9]+\\)"
+               1 2 3))
+
 (use-package glsl-mode
     :ensure t)
 
