@@ -59,9 +59,6 @@
 (load custom-file)
 
 
-(require 'fasm-mode)
-(add-to-list 'auto-mode-alist '("\\.asm\\'" . fasm-mode))
-
 ;;; c-mode
 (setq-default c-basic-offset 4
               c-default-style '((java-mode . "java")
@@ -300,8 +297,39 @@ compilation-error-regexp-alist-alist
     (setq org-format-latex-options
           (plist-put org-format-latex-options :scale (my/org-calc-latex-scale)))
     (setq org-confirm-babel-evaluate nil)
-    ;; Add cancel package for LaTeX preview
-    (add-to-list 'org-latex-packages-alist '("" "cancel" t))))
+
+    ;; Enable Babel support for common languages
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)   ;; Emacs Lisp
+       (shell . t)        ;; Shell scripts (bash, sh)
+       (python . t)       ;; Python
+       (C . t)            ;; C, C++, D
+       (js . t)           ;; JavaScript
+       (sql . t)          ;; SQL
+       (scheme . t)       ;; Scheme (works with Geiser)
+       (haskell . t)      ;; Haskell
+       (latex . t)        ;; LaTeX
+       (dot . t)          ;; Graphviz
+       (makefile . t)     ;; Makefile
+       (org . t)          ;; Org-mode itself
+       (R . t)            ;; R
+       (ruby . t)         ;; Ruby
+       (perl . t)         ;; Perl
+       (sed . t)          ;; sed
+       (awk . t)          ;; awk
+       (css . t)          ;; CSS
+       (sass . t)         ;; Sass
+       (calc . t)         ;; Emacs Calc
+       (gnuplot . t)))    ;; Gnuplot
+
+    ;; Additional Babel settings for better experience
+    (setq org-babel-python-command "python3")
+    (setq org-src-fontify-natively t)        ;; Syntax highlighting in code blocks
+    (setq org-src-tab-acts-natively t)       ;; TAB acts as in the language major mode
+    (setq org-src-preserve-indentation t)    ;; Preserve indentation in source blocks
+    (setq org-edit-src-content-indentation 0) ;; No extra indentation in edit buffer
+    ))
 
 ;; ----------------------------------------
 ;; Scheme REPLs via Geiser (MIT Scheme + Racket)
