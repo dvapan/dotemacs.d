@@ -63,11 +63,40 @@
 (load custom-file)
 
 
-;;; c-mode
+;;; c-mode (cc-mode fallback when tree-sitter grammar is missing)
 (setq-default c-basic-offset 4
               c-default-style '((java-mode . "java")
                                 (awk-mode . "awk")
                                 (other . "bsd")))
+
+;;; C/C++ via tree-sitter + eglot (clangd)
+(setq treesit-language-source-alist
+      '((c   "https://github.com/tree-sitter/tree-sitter-c")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
+
+;; Install any missing grammars on startup. Requires a C compiler (cc/gcc).
+(dolist (lang (mapcar #'car treesit-language-source-alist))
+  (unless (treesit-language-available-p lang)
+    (treesit-install-language-grammar lang)))
+
+(setq major-mode-remap-alist
+      '((c-mode        . c-ts-mode)
+        (c++-mode      . c++-ts-mode)
+        (c-or-c++-mode . c-or-c++-ts-mode)))
+
+(setq c-ts-mode-indent-offset 4
+      c-ts-mode-indent-style  'bsd)
+
+(use-package eglot
+  :hook ((c-ts-mode c++-ts-mode) . eglot-ensure)
+  :bind (:map eglot-mode-map
+              ("C-c l r" . eglot-rename)
+              ("C-c l a" . eglot-code-actions)
+              ("C-c l f" . eglot-format))
+  :config
+  (setq eglot-autoshutdown t
+        eglot-events-buffer-size 0
+        eglot-sync-connect 0))
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -100,11 +129,6 @@
 
 (require 'ansi-color)
 
-(add-hook 'simpc-mode-hook
-          (lambda ()
-            (interactive)
-            (setq-local fill-paragraph-function 'astyle-buffer)))
-
 (defun my-colorize-compilation-buffer ()
   "Apply ANSI color codes and handle hyperlinks in the compilation buffer."
   (let ((inhibit-read-only t))
@@ -132,7 +156,7 @@
         company-selection-wrap-around t)
 
   (setq company-backends
-        '((company-dabbrev-code company-keywords company-files))))
+        '((company-capf company-dabbrev-code company-keywords company-files))))
 
 
 (use-package magit
