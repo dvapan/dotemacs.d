@@ -17,6 +17,10 @@
 (windmove-default-keybindings)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; Enable relative line numbers with absolute for current line
+(setq display-line-numbers-type 'relative)
+(global-display-line-numbers-mode 1)
+
 ;; Use local fixed theme
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'deeper-blue t)
@@ -240,6 +244,9 @@ compilation-error-regexp-alist-alist
     :ensure t)
 
 (use-package go-mode
+  :ensure t)
+
+(use-package php-mode
   :ensure t)
 
 (use-package auto-compile
