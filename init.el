@@ -155,8 +155,10 @@
         company-minimum-prefix-length 1
         company-selection-wrap-around t)
 
+  ;; No buffer-content completion (dropped company-dabbrev-code / company-dabbrev).
+  ;; Only semantic sources: capf (LSP, eglot, racket-xp, elisp), keywords, files.
   (setq company-backends
-        '((company-capf company-dabbrev-code company-keywords company-files))))
+        '((company-capf company-keywords company-files))))
 
 
 (use-package magit
@@ -387,12 +389,33 @@ compilation-error-regexp-alist-alist
   :config
   (setq geiser-racket-binary "/usr/bin/racket")) ;; adjust path if needed
 
-;; Optional: ensure geiser-mode activates in .scm and .rkt files
+;; Optional: ensure geiser-mode activates in .scm files
 (add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
-(add-to-list 'auto-mode-alist '("\\.rkt\\'" . scheme-mode))
 (add-hook 'scheme-mode-hook #'geiser-mode)
 
 ;; Manual REPL launch via: M-x geiser or M-x geiser-mit / geiser-racket
 ;; REPL <-> Code toggle: C-c C-z
+
+;; Racket: use racket-mode for .rkt files (richer than Geiser for Racket)
+;; Override geiser-racket's autoload that maps .rkt -> scheme-mode.
+(use-package racket-mode
+  :ensure t
+  :pin melpa
+  :init
+  (setq auto-mode-alist
+        (cons '("\\.rkt\\'" . racket-mode)
+              (assoc-delete-all "\\.rkt\\'" auto-mode-alist)))
+  :config
+  (setq racket-program "/usr/bin/racket")
+  (add-hook 'racket-mode-hook #'racket-xp-mode))
+
+;; Visual aids for lisp/scheme/racket
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+(use-package macrostep
+  :ensure t
+  :bind ("C-c e" . macrostep-expand))
 
 
