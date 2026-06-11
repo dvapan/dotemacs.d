@@ -2,6 +2,11 @@
 (setq inhibit-startup-message t)
 (add-to-list 'load-path "~/.emacs.d/modes/")
 
+;; Don't pop a *Warnings* window for async native-compilation of packages
+;; (e.g. dune.el references xref functions loaded lazily). Real errors still
+;; land in the echo area; this only stops the buffer from stealing a window.
+(setq native-comp-async-report-warnings-errors 'silent)
+
 ;; Disable tool bar, menu bar, scroll bar.
 (tool-bar-mode -1)
 (menu-bar-mode -1)
@@ -193,6 +198,22 @@
   :ensure t)
 
 (use-package rust-mode
+  :ensure t)
+
+;;; OCaml via opam: tuareg major mode + eglot (ocaml-lsp-server).
+;; Emacs is launched from dwm, not a login shell, so the opam bin dir is not
+;; on PATH. Add it explicitly so eglot can find `ocamllsp'.
+(let ((opam-bin (expand-file-name "~/.opam/default/bin")))
+  (when (file-directory-p opam-bin)
+    (add-to-list 'exec-path opam-bin)
+    (setenv "PATH" (concat opam-bin path-separator (getenv "PATH")))))
+
+(use-package tuareg
+  :ensure t
+  :mode (("\\.ml[iylp]?\\'" . tuareg-mode))
+  :hook (tuareg-mode . eglot-ensure))
+
+(use-package dune
   :ensure t)
 
 (use-package projectile
