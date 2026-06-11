@@ -43,7 +43,7 @@
 
 
 ;; Set default font size for all frames
-(add-to-list 'default-frame-alist '(font . "Monospace-14"))
+(add-to-list 'default-frame-alist '(font . "Monospace-12"))
 
 
 (defun duplicate-line-upd ()
