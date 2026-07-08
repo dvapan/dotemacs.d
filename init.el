@@ -74,8 +74,10 @@
                                 (awk-mode . "awk")
                                 (other . "bsd")))
 
-;;; Tree-sitter grammars. php-ts-mode needs phpdoc/html/css/js/jsdoc
-;;; for embedded code in templates.
+;;; Tree-sitter grammars. php-ts-mode needs phpdoc/html/css/js/jsdoc for
+;;; embedded code in templates. Versions are pinned to what the Emacs 30.2
+;;; font-lock queries expect (see php-ts-mode--language-source-alist);
+;;; grammars from master have incompatible node types.
 (setq treesit-language-source-alist
       '((c   "https://github.com/tree-sitter/tree-sitter-c")
         (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
@@ -84,12 +86,13 @@
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript"
              "master" "tsx/src")
         (php "https://github.com/tree-sitter/tree-sitter-php"
-             "master" "php/src")
+             "v0.23.11" "php/src")
         (phpdoc "https://github.com/claytonrcarter/tree-sitter-phpdoc")
-        (html "https://github.com/tree-sitter/tree-sitter-html")
-        (css "https://github.com/tree-sitter/tree-sitter-css")
-        (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
-        (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+        (html "https://github.com/tree-sitter/tree-sitter-html" "v0.23.0")
+        (css "https://github.com/tree-sitter/tree-sitter-css" "v0.23.0")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript"
+                    "v0.23.0")
+        (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc" "v0.23.0")
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 ;; Install any missing grammars on startup. Requires a C compiler (cc/gcc).
