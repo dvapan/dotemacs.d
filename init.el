@@ -93,7 +93,8 @@
         (javascript "https://github.com/tree-sitter/tree-sitter-javascript"
                     "v0.23.0")
         (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc" "v0.23.0")
-        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")
+        (toml "https://github.com/ikatyang/tree-sitter-toml")))
 
 ;; Install any missing grammars on startup. Requires a C compiler (cc/gcc).
 (dolist (lang (mapcar #'car treesit-language-source-alist))
@@ -114,6 +115,15 @@
 
 ;;; YAML via built-in tree-sitter mode (Symfony configs etc.).
 (add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+
+;;; TOML via built-in tree-sitter mode (Cargo.toml, pyproject.toml etc.).
+(add-to-list 'auto-mode-alist '("\\.toml\\'" . toml-ts-mode))
+
+;;; Plain config files via built-in conf-mode: dotenv (.env, .env.local
+;;; and friends) and ignore files. .ini/.conf/.gitconfig are covered by
+;;; Emacs out of the box.
+(add-to-list 'auto-mode-alist '("/\\.env\\(\\.[^/]*\\)?\\'" . conf-mode))
+(add-to-list 'auto-mode-alist '("/\\.\\(git\\|docker\\)ignore\\'" . conf-unix-mode))
 
 ;; ~/.local/bin holds phpactor and typescript-language-server. Emacs is
 ;; launched from dwm, not a login shell, so add it to PATH explicitly.
