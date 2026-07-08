@@ -161,6 +161,13 @@
 
 (add-hook 'compilation-filter-hook 'my-colorize-compilation-buffer)
 
+;; Talk to compilation processes through a pipe, not a pty. CLIs that
+;; animate progress with cursor save/restore (symfony, composer, docker)
+;; detect the missing terminal and fall back to plain line output.
+(define-advice compilation-start (:around (fn &rest args) no-pty)
+  (let ((process-connection-type nil))
+    (apply fn args)))
+
 (use-package all-the-icons
   :ensure t
   :defer t)
