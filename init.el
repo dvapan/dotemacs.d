@@ -74,10 +74,14 @@
                                 (awk-mode . "awk")
                                 (other . "bsd")))
 
-;;; C/C++ via tree-sitter + eglot (clangd)
+;;; C/C++ via tree-sitter
 (setq treesit-language-source-alist
       '((c   "https://github.com/tree-sitter/tree-sitter-c")
-        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")))
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+        (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
+                    "master" "typescript/src")
+        (tsx "https://github.com/tree-sitter/tree-sitter-typescript"
+             "master" "tsx/src")))
 
 ;; Install any missing grammars on startup. Requires a C compiler (cc/gcc).
 (dolist (lang (mapcar #'car treesit-language-source-alist))
@@ -92,16 +96,9 @@
 (setq c-ts-mode-indent-offset 4
       c-ts-mode-indent-style  'bsd)
 
-(use-package eglot
-  :hook ((c-ts-mode c++-ts-mode) . eglot-ensure)
-  :bind (:map eglot-mode-map
-              ("C-c l r" . eglot-rename)
-              ("C-c l a" . eglot-code-actions)
-              ("C-c l f" . eglot-format))
-  :config
-  (setq eglot-autoshutdown t
-        eglot-events-buffer-size 0
-        eglot-sync-connect 0))
+;;; TypeScript/TSX via built-in tree-sitter modes. Editing only, no LSP.
+(add-to-list 'auto-mode-alist '("\\.ts\\'"  . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -161,7 +158,7 @@
         company-selection-wrap-around t)
 
   ;; No buffer-content completion (dropped company-dabbrev-code / company-dabbrev).
-  ;; Only semantic sources: capf (LSP, eglot, racket-xp, elisp), keywords, files.
+  ;; Only semantic sources: capf (elisp etc.), keywords, files.
   (setq company-backends
         '((company-capf company-keywords company-files))))
 
@@ -200,9 +197,9 @@
 (use-package rust-mode
   :ensure t)
 
-;;; OCaml via opam: tuareg major mode + eglot (ocaml-lsp-server).
+;;; OCaml via opam: tuareg major mode.
 ;; Emacs is launched from dwm, not a login shell, so the opam bin dir is not
-;; on PATH. Add it explicitly so eglot can find `ocamllsp'.
+;; on PATH. Add it explicitly so compile can find dune/ocaml.
 (let ((opam-bin (expand-file-name "~/.opam/default/bin")))
   (when (file-directory-p opam-bin)
     (add-to-list 'exec-path opam-bin)
@@ -210,8 +207,7 @@
 
 (use-package tuareg
   :ensure t
-  :mode (("\\.ml[iylp]?\\'" . tuareg-mode))
-  :hook (tuareg-mode . eglot-ensure))
+  :mode (("\\.ml[iylp]?\\'" . tuareg-mode)))
 
 (use-package dune
   :ensure t)
@@ -385,39 +381,50 @@ compilation-error-regexp-alist-alist
     (setq org-edit-src-content-indentation 0) ;; No extra indentation in edit buffer
     ))
 
-;; ----------------------------------------
-;; Scheme REPLs via Geiser (MIT Scheme + Racket)
+;; --------------------------------------------
+;; Scheme and Racket: plain editing, no REPL, no checkers,
+;; no background processes. Run scripts with `compile' (C-c c).
 ;; --------------------------------------------
 
+;; Geiser is kept installed only because org-babel scheme blocks need it.
+;; It is not hooked into scheme-mode buffers.
 (use-package geiser
   :ensure t
+  :defer t
   :init
-  (setq geiser-active-implementations '(mit racket))
+  (setq geiser-active-implementations '(mit))
   (setq geiser-default-implementation 'mit)
-  (setq geiser-mode-start-repl-p nil) ;; disable auto REPL
+  (setq geiser-mode-start-repl-p nil)
   (setq geiser-repl-query-on-kill-p nil)
-  (setq geiser-log-verbose nil))      ;; silence deprecated warnings
+  (setq geiser-log-verbose nil))
 
 (use-package geiser-mit
   :ensure t
-  :after geiser
+  :defer t
   :config
-  (setq geiser-mit-binary "/usr/bin/mit-scheme")) ;; adjust path if needed
+  (setq geiser-mit-binary "/usr/bin/mit-scheme"))
 
-(use-package geiser-racket
-  :ensure t
-  :after geiser
-  :config
-  (setq geiser-racket-binary "/usr/bin/racket")) ;; adjust path if needed
+;; Geiser's autoload attaches itself to scheme-mode; detach it so
+;; scheme buffers stay plain.
+(remove-hook 'scheme-mode-hook 'geiser-mode--maybe-activate)
 
-;; Optional: ensure geiser-mode activates in .scm files
-(add-to-list 'auto-mode-alist '("\\.scm\\'" . scheme-mode))
-(add-hook 'scheme-mode-hook #'geiser-mode)
+;; Same run key as racket-mode.
+(with-eval-after-load 'scheme
+  (define-key scheme-mode-map (kbd "C-c C-c") #'recompile))
 
-;; Manual REPL launch via: M-x geiser or M-x geiser-mit / geiser-racket
-;; REPL <-> Code toggle: C-c C-z
+;; mit-scheme is not installed (xbps package: mit-scheme-c), so run plain
+;; scheme files through racket. If mit-scheme appears later, the
+;; equivalent command is: mit-scheme --quiet < file.scm
+(add-hook 'scheme-mode-hook
+          (lambda ()
+            (when buffer-file-name
+              (setq-local compile-command
+                          (concat "racket -f "
+                                  (shell-quote-argument
+                                   (file-name-nondirectory buffer-file-name)))))))
 
-;; Racket: use racket-mode for .rkt files (richer than Geiser for Racket)
+;; Racket: racket-mode purely as an editing mode. Without racket-xp-mode
+;; it runs no back end process at all.
 ;; Override geiser-racket's autoload that maps .rkt -> scheme-mode.
 (use-package racket-mode
   :ensure t
@@ -428,12 +435,16 @@ compilation-error-regexp-alist-alist
               (assoc-delete-all "\\.rkt\\'" auto-mode-alist)))
   :config
   (setq racket-program "/usr/bin/racket")
-  (add-hook 'racket-mode-hook #'racket-xp-mode))
-
-;; Visual aids for lisp/scheme/racket
-(use-package rainbow-delimiters
-  :ensure t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  ;; racket-mode binds C-c C-c to racket-run-module-at-point, which
+  ;; starts the REPL back end. Run the script via compile instead.
+  (define-key racket-mode-map (kbd "C-c C-c") #'recompile)
+  (add-hook 'racket-mode-hook
+            (lambda ()
+              (when buffer-file-name
+                (setq-local compile-command
+                            (concat "racket "
+                                    (shell-quote-argument
+                                     (file-name-nondirectory buffer-file-name))))))))
 
 (use-package macrostep
   :ensure t
