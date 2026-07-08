@@ -74,14 +74,23 @@
                                 (awk-mode . "awk")
                                 (other . "bsd")))
 
-;;; C/C++ via tree-sitter
+;;; Tree-sitter grammars. php-ts-mode needs phpdoc/html/css/js/jsdoc
+;;; for embedded code in templates.
 (setq treesit-language-source-alist
       '((c   "https://github.com/tree-sitter/tree-sitter-c")
         (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
         (typescript "https://github.com/tree-sitter/tree-sitter-typescript"
                     "master" "typescript/src")
         (tsx "https://github.com/tree-sitter/tree-sitter-typescript"
-             "master" "tsx/src")))
+             "master" "tsx/src")
+        (php "https://github.com/tree-sitter/tree-sitter-php"
+             "master" "php/src")
+        (phpdoc "https://github.com/claytonrcarter/tree-sitter-phpdoc")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (css "https://github.com/tree-sitter/tree-sitter-css")
+        (javascript "https://github.com/tree-sitter/tree-sitter-javascript")
+        (jsdoc "https://github.com/tree-sitter/tree-sitter-jsdoc")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 
 ;; Install any missing grammars on startup. Requires a C compiler (cc/gcc).
 (dolist (lang (mapcar #'car treesit-language-source-alist))
@@ -96,9 +105,19 @@
 (setq c-ts-mode-indent-offset 4
       c-ts-mode-indent-style  'bsd)
 
-;;; TypeScript/TSX via built-in tree-sitter modes. Editing only, no LSP.
+;;; TypeScript/TSX via built-in tree-sitter modes.
 (add-to-list 'auto-mode-alist '("\\.ts\\'"  . typescript-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . tsx-ts-mode))
+
+;;; YAML via built-in tree-sitter mode (Symfony configs etc.).
+(add-to-list 'auto-mode-alist '("\\.ya?ml\\'" . yaml-ts-mode))
+
+;; ~/.local/bin holds phpactor and typescript-language-server. Emacs is
+;; launched from dwm, not a login shell, so add it to PATH explicitly.
+(let ((local-bin (expand-file-name "~/.local/bin")))
+  (when (file-directory-p local-bin)
+    (add-to-list 'exec-path local-bin)
+    (setenv "PATH" (concat local-bin path-separator (getenv "PATH")))))
 
 ;; Require and initialize `package`.
 (require 'package)
@@ -289,8 +308,30 @@ compilation-error-regexp-alist-alist
 (use-package go-mode
   :ensure t)
 
-(use-package php-mode
-  :ensure t)
+;;; PHP/Symfony via built-in php-ts-mode. Explicit auto-mode entry so it
+;;; wins over any stale php-mode autoload.
+(add-to-list 'auto-mode-alist '("\\.php\\'" . php-ts-mode))
+
+;; Twig templates: plain highlighting mode, no background processes.
+(use-package twig-mode
+  :ensure t
+  :mode "\\.twig\\'")
+
+;;; LSP via eglot: completion, M-., docs in echo area. No on-the-fly
+;;; diagnostics: `eglot-stay-out-of' keeps server diagnostics away from
+;;; flymake, so nothing is underlined or flagged while typing. Inlay
+;;; hints are text over the code, so they are off too.
+;; PHP server: phpactor (~/.local/bin). Per Symfony project, enable
+;; container completion with a .phpactor.json: {"symfony.enabled": true}
+(use-package eglot
+  :hook ((php-ts-mode c-ts-mode c++-ts-mode tuareg-mode
+          typescript-ts-mode tsx-ts-mode) . eglot-ensure)
+  :config
+  (setq eglot-stay-out-of '(flymake)
+        eglot-ignored-server-capabilities '(:inlayHintProvider)
+        eglot-autoshutdown t
+        eglot-events-buffer-config '(:size 0 :format full)
+        eglot-sync-connect 0))
 
 (use-package auto-compile
   :ensure t
