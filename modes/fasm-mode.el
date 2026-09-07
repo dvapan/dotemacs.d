@@ -1,4 +1,4 @@
-;;; fasm-mode.el --- Fasm major mode
+;;; fasm-mode.el --- Fasm major mode  -*- lexical-binding: t; -*-
 
 ;; Author: Fanael Linithien <fanael4@gmail.com>
 ;; URL: https://github.com/Fanael/fasm-mode

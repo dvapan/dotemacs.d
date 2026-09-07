@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 ;; Do not show the startup screen.
 (setq inhibit-startup-message t)
 (add-to-list 'load-path "~/.emacs.d/modes/")
