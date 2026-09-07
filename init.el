@@ -513,3 +513,6 @@ compilation-error-regexp-alist-alist
   :bind ("C-c e" . macrostep-expand))
 
 
+;; Неделя начинается с понедельника (calendar/diary/org-agenda).
+;; Emacs не смотрит на LC_TIME, задаём явно.
+(setq calendar-week-start-day 1)
